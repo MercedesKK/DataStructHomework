@@ -73,7 +73,10 @@ int main()
 	}
 	list3 = mergeList(list1, list2, list3);
 	cout << "合并后的链表：";
-	list3.print();
+	if (list3.size())
+		list3.print();
+	else
+		cout << "NULL";
 	cout << endl;
 	return 0;
 }
