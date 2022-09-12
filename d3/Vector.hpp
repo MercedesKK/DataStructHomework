@@ -59,6 +59,9 @@ namespace MercedesKK
 		/// @param		it 类型为iterator 
 		void erase(iterator it);
 
+		/// @brief 手动清空Vector
+		void clear();
+
 		/// @return 返回容器头部迭代器
 		iterator begin() { return data; };
 
@@ -97,7 +100,7 @@ namespace MercedesKK
 		{
 			temp[i] = vec.data[i];
 		}
-		delete []data;
+		delete[]data;
 		data = temp;
 		size = vec.size;
 		capacity = vec.capacity;
@@ -168,6 +171,15 @@ namespace MercedesKK
 			data[i] = data[i + 1];
 		}
 		size--;
+	}
+
+	template<typename T>
+	inline void Vector<T>::clear()
+	{
+		delete[]data;
+		data = nullptr;
+		size = 0;
+		capacity = 0;
 	}
 
 
