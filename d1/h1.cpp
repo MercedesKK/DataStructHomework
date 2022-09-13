@@ -1,4 +1,4 @@
-#include "LinkList.hpp"
+#include "Link.hpp"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -8,31 +8,6 @@
 using namespace MercedesKK;
 
 static const std::string select_string = "请选择您要进行的操作（1为插入，2为删除，3为查找，4为修改，5为统计，0为取消操作";
-
-/// @brief 我自己的异常类
-class OutOfRange
-{
-public:
-    OutOfRange() :flag(1) {}
-    OutOfRange(int ii) : flag(2), i(ii) {}
-
-    void what() const;
-private:
-    int flag;   ///< different flag represents different error
-    int i;      ///< the node index
-};
-
-void OutOfRange::what() const
-{
-    if (flag == 1)
-    {
-        std::cerr << "未知异常，请重启程序" << std::endl;
-    }
-    else if (flag == 2)
-    {
-        std::cerr << "index超出范围，发生异常，请关闭程序重新开始" << std::endl;
-    }
-}
 
 
 /// @brief class for student only in this cpp
@@ -48,6 +23,11 @@ public:
     /// constructor
     Student() : number(-1), name(""), gender(""), age(-1), category("") {}
 
+    bool operator==(const Student& s)
+    {
+        return s.number == number;
+    }
+
     /// overloading << operator
     friend std::ostream& operator<<(std::ostream& output, const Student& s)
     {
@@ -57,7 +37,7 @@ public:
 };
 
 /// 转换一下，方便从考生的学号找到链表中的节点i
-int findNodeFromNumber(LinkList<Student>& List, int num)
+int findNodeFromNumber(Link<Student>& List, int num)
 {
     for (int i = 1; i <= List.size(); i++)
     {
@@ -70,10 +50,10 @@ int findNodeFromNumber(LinkList<Student>& List, int num)
 
 
 /// detail operation in mainScene func
-void mainPrint(LinkList<Student>& List)
+void mainPrint(Link<Student>& List)
 {
     std::cout << std::endl << std::left << std::setw(14) << "考号" << std::setw(14) << "姓名" << std::setw(14) << "性别" << std::setw(14) << "年龄" << std::setw(14) << "报考类别" << std::endl;
-    List.print();
+    PrintCon(List);
 }
 
 Student readStudent()
@@ -94,16 +74,22 @@ Student readStudent()
     return student;
 }
 
-void mainInsert(int i, LinkList<Student>& List)
+void mainInsert(int i, Link<Student>& List)
 {
     Student student = readStudent();
+    if (List.getElement(List.find(student)).number == student.number)
+    {
+        std::cout << "考号重复！" << endl;
+        return;
+    }
+
     List.insert(i, student);
     if (i == List.size() + 1)
-        List.rearAdd(student);
+        List.push_back(student);
 }
 
 /// scene where main function go in
-void mainScene(LinkList<Student>& List)
+void mainScene(Link<Student>& List)
 {
     std::cout << "首先请建立考生信息系统！" << std::endl;
     std::cout << "请输入考生人数：";
@@ -118,7 +104,15 @@ void mainScene(LinkList<Student>& List)
     std::cout << "请依次输入考生的考号、姓名、性别、年龄及报考类别！" << std::endl;
     for (int i = 1; i <= n; i++)
     {
-        List.rearAdd(readStudent());
+        Student student = readStudent();
+
+        if (List.getElement(List.find(student)).number == student.number)
+        {
+            std::cout << "考号重复！程序退出！请重新打开！" << endl;
+            return;
+        }
+
+        List.push_back(student);
     }
 
     mainPrint(List);
@@ -154,21 +148,17 @@ void mainScene(LinkList<Student>& List)
             std::cin >> num;
             int i = findNodeFromNumber(List, num);
 
-            /// 异常处理
-            try
+            //异常处理
+
+            if (i == -1)
             {
-                if (i == -1)
-                {
-                    throw OutOfRange(i);
-                }
-                std::cout << "你删除的考生信息是：" << List.getElement(i) << std::endl;
-                List.erase(i);
-                mainPrint(List);
+                throw "未找到";
             }
-            catch (OutOfRange& e)
-            {
-                e.what();
-            }
+            std::cout << "你删除的考生信息是：" << List.getElement(i) << std::endl;
+            List.erase(i);
+            mainPrint(List);
+
+
         }
         else if (n == 3)
         {
@@ -217,7 +207,7 @@ void mainScene(LinkList<Student>& List)
 
 int main()
 {
-    LinkList<Student> List;
+    Link<Student> List;
     mainScene(List);
     return 0;
 }
