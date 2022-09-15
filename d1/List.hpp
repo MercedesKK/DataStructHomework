@@ -356,6 +356,35 @@ namespace MercedesKK
 
 		/// @brief ½»»»
 		void swap(List<T>& lt) { std::swap(_head, lt._head); }
+
+		T getElement(int n)
+		{
+			iterator it = begin();
+			int i = 1;
+			while (it != end())
+			{
+				if (i == n)
+				{
+					return *it;
+				}
+				it++;
+				i++;
+			}
+			return *it;
+		}
+
+		void modify(iterator it, const T& data)
+		{
+
+			iterator temp = erase(it);
+			insert(temp, data);
+		}
+
+		void modify(int n, const T& data)
+		{
+			erase(n);
+			insert(n, data);
+		}
 	};
 }
 

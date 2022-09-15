@@ -1,4 +1,4 @@
-#include "Link.hpp"
+#include "List.hpp"
 #include <iostream>
 #include <string>
 #include <iomanip>
@@ -37,7 +37,7 @@ public:
 };
 
 /// 转换一下，方便从考生的学号找到链表中的节点i
-int findNodeFromNumber(Link<Student>& List, int num)
+int findNodeFromNumber(List<Student>& List, int num)
 {
     for (int i = 1; i <= List.size(); i++)
     {
@@ -50,7 +50,7 @@ int findNodeFromNumber(Link<Student>& List, int num)
 
 
 /// detail operation in mainScene func
-void mainPrint(Link<Student>& List)
+void mainPrint(List<Student>& List)
 {
     std::cout << std::endl << std::left << std::setw(14) << "考号" << std::setw(14) << "姓名" << std::setw(14) << "性别" << std::setw(14) << "年龄" << std::setw(14) << "报考类别" << std::endl;
     PrintCon(List);
@@ -74,7 +74,7 @@ Student readStudent()
     return student;
 }
 
-void mainInsert(int i, Link<Student>& List)
+void mainInsert(int i, List<Student>& List)
 {
     Student student = readStudent();
     if (List.getElement(List.find(student)).number == student.number)
@@ -89,7 +89,7 @@ void mainInsert(int i, Link<Student>& List)
 }
 
 /// scene where main function go in
-void mainScene(Link<Student>& List)
+void mainScene(List<Student>& List)
 {
     std::cout << "首先请建立考生信息系统！" << std::endl;
     std::cout << "请输入考生人数：";
@@ -207,7 +207,7 @@ void mainScene(Link<Student>& List)
 
 int main()
 {
-    Link<Student> List;
+    List<Student> List;
     mainScene(List);
     return 0;
 }
