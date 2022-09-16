@@ -1,5 +1,5 @@
 #include <iostream>
-#include "LinkList.hpp"
+#include "List.hpp"
 #include <cassert>
 
 using namespace MercedesKK;
@@ -9,74 +9,55 @@ using namespace std;
 /// @param		list1 第一个链表
 /// @param		list2 第二个链表
 /// @return 返回合并后的链表
-LinkList<int>& mergeList(LinkList<int>& list1, LinkList<int>& list2	,LinkList<int>& list3)
+List<int>& mergeList(List<int>& list1, List<int>& list2	,List<int>& list3)
 {
-	Node<int>* l1 = list1.getHeader(), *l2 = list2.getHeader();
+	auto it1 = list1.begin();
+	auto it2 = list2.begin();
 
-	while (l1 != NULL && l2 != NULL)
+	while (it1 != list1.end() && it2 != list2.end())
 	{
-		if (l1->data < l2->data)
+		if (*it1 < *it2)
+			++it1;
+		else if (*it1 > *it2)
+			++it2;
+		else
 		{
-			list3.rearAdd(l1->data);
-			l1 = l1->pnext;
-		}
-		else if (l1->data > l2->data)
-		{
-			list3.rearAdd(l2->data);
-			l2 = l2->pnext;
-		}
-		else if (l1->data == l2->data)
-		{
-			list3.rearAdd(l2->data);
-			l1 = l1->pnext;
-			l2 = l2->pnext;
+			list3.push_back(*it1);
+			++it1;
+			++it2;
 		}
 	}
-	while (l1 != NULL)
-	{
-		list3.rearAdd(l1->data);
-		l1 = l1->pnext;
-	}
-	while (l2 != NULL)
-	{
-		list3.rearAdd(l2->data);
-		l2 = l2->pnext;
-	}
+
 	return list3;
 }
 
 int main()
 {
-	LinkList<int> list1, list2, list3;
+	List<int> list1, list2, list3;
 	cout << "已知两个非降序链表序列S1和S2,输入分2行，分别在每行给出由若干个正整数构成的非降序序列，用-1表示序列的结尾（-1不属于这个序列）" << endl;
 	cout << "请输入S1：";
-	while (1)
-	{
-		int s1;
-		cin >> s1;
-		assert(cin);
-		if (s1 == -1)
-			break;
-		list1.rearAdd(s1);
 
-	}
-	cout << "请输入S2：";
-	while (1)
-	{
-		int s2;
-		cin >> s2;
-		assert(cin);
-		if (s2 == -1)
-			break;
-		list2.rearAdd(s2);
-
-	}
+	int i;
+	//输入
+	while (cin >> i && i != -1)
+		list1.push_back(i);
+	while (cin >> i && i != -1)
+		list2.push_back(i);
 	list3 = mergeList(list1, list2, list3);
 	cout << "合并后的链表：";
-	if (list3.size())
-		list3.print();
+	//输出结果
+	if (!list3.empty())
+	{
+		for (auto it = list3.begin(); it != list3.end(); ++it)
+			cout << *it << " ";
+	}
 	else
 		cout << "NULL";
-	cout << endl;
+
+	cin.clear();
+	cin.ignore(1024, '\n');
+
+	cout << endl << "Enter to Exit";
+	cin.get();
 	return 0;
 }
