@@ -4,21 +4,20 @@
 #include <iomanip>
 #include <cassert>
 
-/// using my namespace in case of member function used
 using namespace MercedesKK;
 
 static const std::string select_string = "请选择您要进行的操作（1为插入，2为删除，3为查找，4为修改，5为统计，0为取消操作";
 
 
-/// @brief class for student only in this cpp
+/// @brief 在当前作业中设定的学生类
 class Student
 {
 public:
-    int number;             ///< exam number
-    std::string name;       ///< student name
-    std::string gender;     ///< gender
-    int age;                ///< age
-    std::string category;   ///< exam for direction
+    int number;             ///< 考号
+    std::string name;       ///< 学生名字
+    std::string gender;     ///< 性别
+    int age;                ///< 年龄
+    std::string category;   ///< 报考种类
 
     /// constructor
     Student() : number(-1), name(""), gender(""), age(-1), category("") {}

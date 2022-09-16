@@ -20,7 +20,7 @@ namespace MercedesKK
 	template<class T>
 	class List;
 
-	// @brief 结点类
+	/// @brief 结点类
 	template<class T>
 	class Node
 	{
@@ -30,11 +30,9 @@ namespace MercedesKK
 		Node<T>* _prev;		///< 前指针
 
 		Node(const T& val = T()) :_data(val), _next(nullptr), _prev(nullptr) {}
-
-		void prints() { cout << "sss" << endl; }
 	};
 
-	// @brief 封装迭代器
+	/// @brief 封装迭代器
 	template<class T, class Ref, class Ptr>
 	class ListIterator
 	{
@@ -55,17 +53,19 @@ namespace MercedesKK
 
 	public:
 
-		ListIterator(LinkNode* pnode = nullptr) :_pnode(pnode) {}
-
+		/// @brief 指针转迭代器构造函数
+		ListIterator(LinkNode* pnode = nullptr) :_pnode(pnode) {} 
+		/// @brief 拷贝构造函数
 		ListIterator(const self& lt) :_pnode(lt._pnode) {}
 
-		reference operator*() { return _pnode->_data; }
-		pointer operator->() { return &(operator*()); }
-		const_reference operator*()const { return _pnode->_data; }
-		const_pointer operator->()const { return &(operator*()); }
 
-		bool operator!=(const self& x)const { return _pnode != x._pnode; }
-		bool operator==(const self& x)const { return _pnode == x._pnode; }
+		reference operator*() { return _pnode->_data; }						///< 重载*
+		pointer operator->() { return &(operator*()); }						///< 重载->
+		const_reference operator*()const { return _pnode->_data; }			///< 重载*  const类型
+		const_pointer operator->()const { return &(operator*()); }			///< 重载-> const类型
+
+		bool operator!=(const self& x)const { return _pnode != x._pnode; }	///< 重载!=
+		bool operator==(const self& x)const { return _pnode == x._pnode; }	///< 重载==
 
 		// @brief 前置自增
 		self& operator++()
@@ -118,7 +118,7 @@ namespace MercedesKK
 		}
 	};
 
-	/// @brief 仿照STL中的List
+	/// @brief 仿STL中的List
 	template<class T>
 	class List
 	{
@@ -188,10 +188,9 @@ namespace MercedesKK
 		}
 
 		/// @brief 赋值运算符重载
-		List<T>& operator=(const List<T>& lt)
+		List<T>& operator=(List<T>& lt)
 		{
-			List<T> tmp(lt);
-			swap(tmp);
+			return lt;
 		}
 
 		/// @brief 尾插
@@ -219,21 +218,6 @@ namespace MercedesKK
 			new_node->_next = pos._pnode;
 
 			return pos;
-		}
-
-		/// @brief 任意位置插入一个数据   n从1开始
-		void insert(int n, const T& val = T())
-		{
-			iterator pos = begin() + n - 1;
-
-			LinkNode* new_node = new LinkNode;
-			new_node->_data = val;
-			LinkNode* pprev = pos._pnode->_prev;
-
-			new_node->_prev = pprev;
-			pprev->_next = new_node;
-			pos._pnode->_prev = new_node;
-			new_node->_next = pos._pnode;
 		}
 
 		/// @brief 任意位置插入多个数据
@@ -288,24 +272,6 @@ namespace MercedesKK
 			return last;
 		}
 
-		/// @brief  任意位置删除一个数据 n从1开始
-		void erase(int n)
-		{
-			iterator pos = begin() + n - 1;
-
-			LinkNode* pdel = pos._pnode;
-			LinkNode* pnext = pdel->_next;
-			LinkNode* pprev = pdel->_prev;
-
-			//如果为空就不用进行删除操作，同时不能删除头结点
-			if (!empty() && pdel != _head)
-			{
-				pprev->_next = pnext;
-				pnext->_prev = pprev;
-				delete pdel;
-			}
-		}
-
 		/// @brief 查找元素
 		iterator find(iterator first, iterator last, T element)
 		{
@@ -317,22 +283,6 @@ namespace MercedesKK
 				it++;
 			}
 			return last;
-		}
-
-
-		/// @brief 查找元素
-		int find(const T& element)
-		{
-			int i = 1;
-			iterator it = begin();
-			while (it != end())
-			{
-				if (*it == element)
-					return i;
-				it++;
-				i++;
-			}
-			return -1;
 		}
 
 		/// @brief 判空
@@ -357,6 +307,59 @@ namespace MercedesKK
 		/// @brief 交换
 		void swap(List<T>& lt) { std::swap(_head, lt._head); }
 
+
+
+		/// *************************************** 新增为本题使用 ********************************************
+		/// @brief 查找元素
+		int find(const T& element)
+		{
+			int i = 1;
+			iterator it = begin();
+			while (it != end())
+			{
+				if (*it == element)
+					return i;
+				it++;
+				i++;
+			}
+			return -1;
+		}
+
+
+		/// @brief  任意位置删除一个数据 n从1开始
+		void erase(int n)
+		{
+			iterator pos = begin() + n - 1;
+
+			LinkNode* pdel = pos._pnode;
+			LinkNode* pnext = pdel->_next;
+			LinkNode* pprev = pdel->_prev;
+
+			//如果为空就不用进行删除操作，同时不能删除头结点
+			if (!empty() && pdel != _head)
+			{
+				pprev->_next = pnext;
+				pnext->_prev = pprev;
+				delete pdel;
+			}
+		}
+
+		/// @brief 任意位置插入一个数据   n从1开始
+		void insert(int n, const T& val = T())
+		{
+			iterator pos = begin() + n - 1;
+
+			LinkNode* new_node = new LinkNode;
+			new_node->_data = val;
+			LinkNode* pprev = pos._pnode->_prev;
+
+			new_node->_prev = pprev;
+			pprev->_next = new_node;
+			pos._pnode->_prev = new_node;
+			new_node->_next = pos._pnode;
+		}
+
+		/// @brief 输入第n的节点位置返回元素值
 		T getElement(int n)
 		{
 			iterator it = begin();
@@ -373,6 +376,7 @@ namespace MercedesKK
 			return *it;
 		}
 
+		/// @brief 修改迭代器指针位置的值
 		void modify(iterator it, const T& data)
 		{
 
@@ -380,6 +384,7 @@ namespace MercedesKK
 			insert(temp, data);
 		}
 
+		/// @brief 修改第n个节点位置的值
 		void modify(int n, const T& data)
 		{
 			erase(n);
