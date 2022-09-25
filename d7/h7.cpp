@@ -29,5 +29,11 @@ int main()
 	}
 	cout << sum;
 
+	cin.clear();
+	cin.ignore(1024, '\n');
+
+	cout << endl << "Enter to Exit";
+	cin.get();
+
 	return 0;
 }

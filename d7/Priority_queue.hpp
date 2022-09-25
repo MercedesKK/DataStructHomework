@@ -1,10 +1,4 @@
-/*
-* @file Priority_queue
-* @author MercedesKK
-* @date 2022-9-12
-* @brief the mini Priority_queue written by me
-* @email 2455650395@qq.com
-*/
+/* @author 张靖凯 */
 #ifndef _PRIORITY_QUEUE_H_
 #define _PRIORITY_QUEUE_H_
 
@@ -16,15 +10,15 @@ namespace MercedesKK
 {
 
 	template<typename T, typename compare = std::less<T>>
-	class MyPriorityQueue 
+	class Priority_queue 
 	{
 	private:
 		size_t _size = 0;	///< 容量大小
 		Vector<T> _pq;		///< 以vector实现
 		compare _cmp;		///< function object
 	public:
-		MyPriorityQueue()  {}
-		~MyPriorityQueue() {};
+		Priority_queue()  {}
+		~Priority_queue() {};
 
 		void push(const T& key);
 		void pop();
@@ -35,7 +29,7 @@ namespace MercedesKK
 	};
 
 	template<typename T, typename compare>
-	void MyPriorityQueue<T, compare>::push(const T& key)
+	void Priority_queue<T, compare>::push(const T& key)
 	{
 		_pq.push_back(key);
 		_size++;
@@ -55,7 +49,7 @@ namespace MercedesKK
 
 	//将顶部元素删除，将尾部元素替换到顶部，然后下沉该元素
 	template<typename T, typename compare>
-	void MyPriorityQueue<T, compare>::pop()
+	void Priority_queue<T, compare>::pop()
 	{
 		if (_size == 0)
 			return;
@@ -99,7 +93,7 @@ namespace MercedesKK
 
 
 	template<typename T, typename compare>
-	inline T MyPriorityQueue<T, compare>::top()
+	inline T Priority_queue<T, compare>::top()
 	{
 		if (empty()) 
 			throw("Priority queue is empty!");
@@ -108,7 +102,7 @@ namespace MercedesKK
 
 	//清空堆
 	template<typename T, typename compare>
-	inline void MyPriorityQueue<T, compare>::clear()
+	inline void Priority_queue<T, compare>::clear()
 	{
 		_pq.clear();
 		_size = 0;
