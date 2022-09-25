@@ -57,5 +57,11 @@ int main()
         q2.pop();
     }
 
+    cin.clear();
+    cin.ignore(1024, '\n');
+
+    cout << endl << "Enter to Exit";
+    cin.get();
+
     return 0;
 }

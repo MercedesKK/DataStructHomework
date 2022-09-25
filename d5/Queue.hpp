@@ -1,10 +1,4 @@
-/*
-* @file Queue
-* @author MercedesKK
-* @date 2022-9-10
-* @brief the mini Queue written by me
-* @email 2455650395@qq.com
-*/
+/* @author ’≈æ∏ø≠ */
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
