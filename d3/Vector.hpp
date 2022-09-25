@@ -1,74 +1,71 @@
-/*
-* @file Vector
-* @author MercedesKK
-* @date 2022-9-9
-* @brief the mini Vector written by me
-* @email 2455650395@qq.com
-*/
+/* @author 张靖凯 */
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
 namespace MercedesKK
 {
-	/// @warning 1.注意iterator和index都是下标从0开始
-	/// @detail  实现了元素数量超出_size时容量翻倍的操作
+	/**
+	* @brief 自行实现的vector容器
+	* @details 实现了元素数量超出_size时容量翻倍的操作
+	* 简化，迭代器在Vector类内直接实现
+	*/
 	template <typename T>
 	class Vector
 	{
 	public:
 		using value_type = T;
-		using iterator = T*;
+		using iterator   = T*;
+
 	private:
-		value_type* _data;		///< 动态分配数组
-		size_t _size;			///< _size同STL的_size
-		size_t _capacity;		///< 同STL，_capacity >= _size 
+		value_type* _data;		///< 动态分配实现的数组
+		size_t _size;			///< 已有元素数量
+		size_t _capacity;		///< 容器容量
+
 	public:
-		/// 五类构造函数 + 析构函数
+
+		/// @name Constructors
+		/// @{
 		Vector() :_data(nullptr), _size(0), _capacity(0) {}
 		~Vector();
 		Vector(const Vector& vec);
 		Vector& operator=(const Vector& vec);
+		/// @} 
+		/// end of Constructors
 
-		/// 运算符重载
+		/// @name 重载运算符
+		/// @{
 		value_type& operator[](size_t index) { return _data[index]; };
 		bool operator==(const Vector& vec) const;
+		/// @}
+		/// end of overloads
 
-		/// @param 要插入的值
+
+		/// @name Operations
+		/// @{
+		/// 
 		void push_back(value_type val);
-
 		void pop_back() { --_size; };
 
-		/// @return 返回容器里已有元素的数量
 		size_t Size() const { return _size; };
-
-		/// @return 返回容器的容量
 		size_t capacity() const { return _capacity; };
-
 		bool empty() { return _size == 0; };
-
-		/// @return 返回容器头部元素
-		value_type front() const { return _data[0]; };
-
-		/// @return 返回容器尾部元素
-		value_type back() const { return _data[_size - 1]; };
-
-		/// @param		it 类型为iterator 
-		/// @param		val 类型为value_type
-		void insert(iterator it, value_type val);
-
-		/// @param		it 类型为iterator 
-		void erase(iterator it);
-
-		/// @brief 手动清空Vector
 		void clear();
 
-		/// @return 返回容器头部迭代器
-		iterator begin() { return _data; };
+		value_type front() const { return _data[0]; };
+		value_type back() const { return _data[_size - 1]; };
 
-		/// @return 返回容器尾部迭代器
+		void insert(iterator it, value_type val);
+		void erase(iterator it);
+		/// @}
+		/// end of Operations
+
+		/* 迭代器 */
+		iterator begin() { return _data; };
 		iterator end() { return _data + _size; };
 
 	};
+
+
 	template <typename T>
 	Vector<T>::~Vector()
 	{

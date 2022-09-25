@@ -3,7 +3,6 @@
 #include <cassert>
 #include "Vector.hpp"
 
-//using namespace std;		///< ±ðÓÃ
 using namespace MercedesKK;	///< use my namespace
 
 struct Position
@@ -134,6 +133,12 @@ int main()
     dfs(inPos.x, inPos.y);
     printMap();
     printRoute();
+
+    std::cin.clear();
+    std::cin.ignore(1024, '\n');
+
+    std::cout << std::endl << "Enter to Exit";
+    std::cin.get();
     return 0;
 }
 
