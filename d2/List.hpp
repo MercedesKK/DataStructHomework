@@ -1,14 +1,10 @@
-/*
-* @file LinkList
-* @author MercedesKK
-* @date 2022-9-7
-* @brief the Linklist written by me
-* @email 2455650395@qq.com
-*/
-#ifndef _LINKLIST_H_
-#define _LINKLIST_H_
-#include<iostream>
-#include<assert.h>
+/* @author 张靖凯 */
+
+#pragma once
+
+#include <iostream>
+#include <assert.h>
+#include <xutility>
 
 using std::cin;
 using std::cout;
@@ -17,36 +13,53 @@ using std::endl;
 namespace MercedesKK
 {
 	// 前向声明
-	template<class T>
-	class List;
+	template <typename value_type> class List; 
+	template <typename T, typename Ref, typename Ptr> class ListIterator;
 
 	/// @brief 结点类
 	template<class T>
 	class Node
 	{
 	public:
-		T _data;			///< 元素
-		Node<T>* _next;		///< 后指针
-		Node<T>* _prev;		///< 前指针
+		using value_type = T;
+		using NodePtr = Node<T>*;
+		using NodeRef = Node<T>&;
 
-		Node(const T& val = T()) :_data(val), _next(nullptr), _prev(nullptr) {}
+	public:
+		value_type _data;	///< 元素
+		NodePtr _next;		///< 后指针
+		NodePtr _prev;		///< 前指针
+
+		Node() noexcept :_data(value_type()), _next(this), _prev(this) {}
+		Node(value_type val, NodePtr next, NodePtr prev) :_data(), _next(next), _prev(prev) {}
+		Node(const Node& right) = delete;
+		~Node() {}
 	};
 
-	/// @brief 封装迭代器
+
+	/**
+	* @class ListIterator
+	* @brief 用迭代器封装指针，重载++ -- ()等operator
+	* 同时迭代器种类设置为bidirectional_iterator_tag
+	*/
 	template<class T, class Ref, class Ptr>
 	class ListIterator
 	{
-		friend List<T>;
-
 	public:
-		using LinkNode = Node<T>;
-		using self = ListIterator<T, Ref, Ptr>;
-		// 引用
-		using reference = Ref;
-		using const_reference = const Ref;
-		// 指针
-		using pointer = Ptr;
-		using const_pointer = const Ptr;
+		using LinkNode		    = Node<T>;
+		using self				= ListIterator<T, Ref, Ptr>;
+
+		using iterator_category = std::bidirectional_iterator_tag;
+		using value_type		= T;
+		using pointer			= Ptr;
+		using reference		    = Ref;
+		using size_type			= size_t;
+		using difference_type   = ptrdiff_t;
+
+		using const_reference   = const Ref;
+		using const_pointer		= const Ptr;
+
+		friend List<value_type>;
 
 	private:
 		LinkNode* _pnode;				///< 迭代器本质是指针
@@ -63,59 +76,12 @@ namespace MercedesKK
 		pointer operator->() { return &(operator*()); }						///< 重载->
 		const_reference operator*()const { return _pnode->_data; }			///< 重载*  const类型
 		const_pointer operator->()const { return &(operator*()); }			///< 重载-> const类型
-
 		bool operator!=(const self& x)const { return _pnode != x._pnode; }	///< 重载!=
 		bool operator==(const self& x)const { return _pnode == x._pnode; }	///< 重载==
-
-		// @brief 前置自增
-		self& operator++()
-		{
-			_pnode = _pnode->_next;
-			return *this;
-		}
-
-		// @brief 后置自增
-		self operator++(int)
-		{
-			LinkNode* tmp = _pnode;
-			_pnode = _pnode->_next;
-			return tmp;
-		}
-
-		// @brief 前置自减
-		self& operator--()
-		{
-			_pnode = _pnode->_prev;
-			return *this;
-		}
-
-		// @brief 后置自减
-		self operator--(int)
-		{
-			LinkNode* tmp = _pnode;
-			_pnode = _pnode->_prev;
-			return tmp;
-		}
-
-		// @brief 重载+
-		self operator+(int i)
-		{
-			while (i--)
-			{
-				_pnode = _pnode->_next;
-			}
-			return *this;
-		}
-
-		// @brief 重载-
-		self operator-(int i)
-		{
-			while (i--)
-			{
-				_pnode = _pnode->_prev;
-			}
-			return *this;
-		}
+		self& operator++(){_pnode = _pnode->_next;return *this;}
+		self operator++(int){LinkNode* tmp = _pnode;_pnode = _pnode->_next;return tmp;}
+		self& operator--(){_pnode = _pnode->_prev;return *this;}
+		self operator--(int){LinkNode* tmp = _pnode;_pnode = _pnode->_prev;return tmp;}
 	};
 
 	/// @brief 仿STL中的List
@@ -123,15 +89,21 @@ namespace MercedesKK
 	class List
 	{
 	public:
-		using LinkNode = Node<T>;
-		using iterator = ListIterator<T, T&, T*>;
-		using const_iterator = ListIterator<T, const T&, const T*>;
+		using value_type	  = T;
+		using difference_type = ptrdiff_t;
+		using size_type		  = size_t;
+		using pointer		  = value_type*;
+		using reference		  = value_type&;
+
+		using LinkNode		  = Node<T>;
+		using iterator		  = ListIterator<T, T&, T*>;
+		using const_iterator  = ListIterator<T, const T&, const T*>;
 
 	private:
 		LinkNode* _head;		///< 头指针
 
 		/// @brief 创建头结点
-		void Creatphead()
+		void Creatphead() 
 		{
 			_head = new LinkNode;
 			_head->_next = _head;
@@ -139,18 +111,19 @@ namespace MercedesKK
 		}
 
 	public:
-		iterator begin() { return _head->_next; }					///< 头迭代器
-		iterator end() { return _head; }							///< 尾迭代器
-		const_iterator cbegin()const { return _head->_next; }		///< const 头迭代器
-		const_iterator cend()const { return _head; }				///< const 尾迭代器
+		iterator begin()	   noexcept { return _head->_next; }			///< 头迭代器
+		iterator end()		   noexcept { return _head; }					///< 尾迭代器
+		const_iterator cbegin()const noexcept { return _head->_next; }		///< const 头迭代器
+		const_iterator cend()  const noexcept { return _head; }				///< const 尾迭代器
 
+		/// @{
 		/// @brief 无参构造函数
-		List() { Creatphead(); }
+		List()noexcept { Creatphead(); }
 
 		/// @brief 迭代器区间构造函数
 		/// @param 两个迭代器
 		template<class InputIterator>
-		List(InputIterator first, InputIterator last)
+		List(InputIterator first, InputIterator last) noexcept
 		{
 			Creatphead();
 			while (first != last)
@@ -161,7 +134,7 @@ namespace MercedesKK
 		}
 
 		/// @brief 构造指定n个元素函数
-		List(int n, const T& val = T())
+		List(int n, const T& val = T())noexcept
 		{
 			Creatphead();
 			while (n)
@@ -172,7 +145,7 @@ namespace MercedesKK
 		}
 
 		/// @brief 拷贝构造函数
-		List(const List<T>& lt)
+		List(const List<T>& lt)noexcept
 		{
 			Creatphead();
 			List tmp(lt.cbegin(), lt.cend());
@@ -186,6 +159,8 @@ namespace MercedesKK
 			delete _head;
 			_head = nullptr;
 		}
+		/// @}
+		/// end of Constructors
 
 		/// @brief 赋值运算符重载
 		List<T>& operator=(List<T>& lt)
@@ -337,5 +312,3 @@ void PrintCon(const MercedesKK::List<T>& con)
 	}
 	cout << endl;
 }
-
-#endif

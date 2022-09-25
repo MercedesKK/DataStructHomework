@@ -3,7 +3,9 @@
 #include <cassert>
 
 using namespace MercedesKK;
-using namespace std;
+using std::cin;
+using std::cout;
+using std::endl;
 
 /// @brief 两个废降序链表合成一条链表
 /// @param		list1 第一个链表
@@ -35,17 +37,51 @@ int main()
 {
 	List<int> list1, list2, list3;
 	cout << "已知两个非降序链表序列S1和S2,输入分2行，分别在每行给出由若干个正整数构成的非降序序列，用-1表示序列的结尾（-1不属于这个序列）" << endl;
-	cout << "请输入S1：";
 
-	int i;
-	//输入
-	while (cin >> i && i != -1)
-		list1.push_back(i);
-	while (cin >> i && i != -1)
-		list2.push_back(i);
+	cout << "请输入S1和S2：";
+	while (1)
+	{
+
+		int i;
+		cin >> i;
+		if (!cin)
+		{
+			std::cerr << "输入有错误，程序终止" << endl; 
+			cin.clear(); 
+			cin.ignore(1024, '\n');
+			return -1;
+		}
+		if (i != -1)
+		{
+			list1.push_back(i);
+		}
+		else
+			break;
+	}
+
+	while (1)
+	{
+		int i;
+		cin >> i;
+		if (!cin)
+		{
+			std::cerr << "输入有错误，程序终止" << endl;
+			cin.clear();
+			cin.ignore(1024, '\n');
+			return -1;
+		}
+		if (i != -1)
+		{
+			list2.push_back(i); 
+		}
+		else
+			break;
+	}
+
 	list3 = mergeList(list1, list2, list3);
-	cout << "合并后的链表：";
+
 	//输出结果
+	cout << "合并后的链表：";
 	if (!list3.empty())
 	{
 		for (auto it = list3.begin(); it != list3.end(); ++it)
