@@ -84,7 +84,7 @@ int Graph<T>::convertToIndex(T nodeName)
 template<typename T>
 void Graph<T>::createNode()
 {
-	if (haveCreateNodeOnce)
+	if (verticesNum)
 	{
 		cout << "\n已经创建过顶点，无需继续创建\n";
 		return;
@@ -101,6 +101,7 @@ void Graph<T>::createNode()
 		if (!cin || verticesNum < 2)
 		{
 			cout << "顶点输入错误" << endl;
+			verticesNum = 0;
 			cin.clear();
 			cin.ignore(0x3f3f3f3f, '\n');
 			return;
