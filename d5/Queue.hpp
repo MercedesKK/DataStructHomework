@@ -2,6 +2,8 @@
 #ifndef _QUEUE_H_
 #define _QUEUE_H_
 
+#include <cstddef>
+
 namespace MercedesKK
 {
 	/// @brief ºÚµ•∂”¡–

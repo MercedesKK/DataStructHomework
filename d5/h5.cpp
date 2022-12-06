@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Queue.hpp"
+#include <assert.h>
 
 using namespace MercedesKK;
 using namespace std;
@@ -10,10 +11,14 @@ int main()
     Queue<int> q1, q2;
     int n;
     cin >> n;
+    assert(cin);
     while (n--)
     {
         int m;
         cin >> m;
+
+        assert(cin);
+
         if (m % 2)
             q1.push(m);
         else

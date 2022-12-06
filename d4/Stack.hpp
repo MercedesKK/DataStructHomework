@@ -3,6 +3,7 @@
 #define _STACK_H_
 
 #include <iostream>
+#include <cstddef>
 
 namespace MercedesKK
 {

@@ -8,6 +8,11 @@ using namespace MercedesKK;
 
 static const std::string select_string = "请选择您要进行的操作（1为插入，2为删除，3为查找，4为修改，5为统计，0为取消操作";
 
+void EnterToExit()
+{
+    system("pause");
+    exit(1);
+}
 
 /// @brief 在当前作业中设定的学生类
 class Student
@@ -51,7 +56,11 @@ int findNodeFromNumber(List<Student>& List, int num)
 /// detail operation in mainScene func
 void mainPrint(List<Student>& List)
 {
+//#if defined(__WIN32__)
     std::cout << std::endl << std::left << std::setw(14) << "考号" << std::setw(14) << "姓名" << std::setw(14) << "性别" << std::setw(14) << "年龄" << std::setw(14) << "报考类别" << std::endl;
+//#elif defined(__linux__)
+//    std::cout << std::endl << std::left << std::setw(16) << "考号" << std::setw(16) << "姓名" << std::setw(16) << "性别" << std::setw(16) << "年龄" << std::setw(18) << "报考类别" << std::endl;
+//#endif
     PrintCon(List);
 }
 
@@ -96,7 +105,11 @@ void mainScene(List<Student>& List)
 
     int n;      ///< student number
     std::cin >> n;
-    assert(n >= 0), assert(n < 0x3f3f3f3f);
+    if (!cin || n < 0 || n > 0x3f3f3f3f)
+    {
+        std::cout << "输入人数有误，程序退出" << std::endl;
+        EnterToExit();
+    }
 
 
 
@@ -151,7 +164,8 @@ void mainScene(List<Student>& List)
 
             if (i == -1)
             {
-                throw "未找到";
+                std::cout << "输入错误" << std::endl;
+                EnterToExit();
             }
             std::cout << "你删除的考生信息是：" << List.getElement(i) << std::endl;
             List.erase(i);
@@ -172,7 +186,11 @@ void mainScene(List<Student>& List)
                 std::cin.ignore(1024, '\n');
                 continue;
             }
-            std::cout << std::endl << std::left << std::setw(14) << "考号" << std::setw(14) << "姓名" << std::setw(14) << "性别" << std::setw(14) << "年龄" << std::setw(14) << "报考类别" << std::endl;
+            //#if defined(__WIN32__)
+                std::cout << std::endl << std::left << std::setw(14) << "考号" << std::setw(14) << "姓名" << std::setw(14) << "性别" << std::setw(14) << "年龄" << std::setw(14) << "报考类别" << std::endl;
+            //#elif defined(__linux__)
+            //    std::cout << std::endl << std::left << std::setw(16) << "考号" << std::setw(16) << "姓名" << std::setw(16) << "性别" << std::setw(16) << "年龄" << std::setw(18) << "报考类别" << std::endl;
+            //#endif
             std::cout << List.getElement(i) << std::endl;
         }
         else if (n == 4)

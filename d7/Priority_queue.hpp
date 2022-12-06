@@ -8,18 +8,21 @@
 
 namespace MercedesKK
 {
-
-	template<typename T, typename compare = std::less<T>>
+	/// @brief 仿照STL用堆思想实现优先队列
+	template<typename T, typename Container = Vector<T>, typename compare = std::less<T>>
 	class Priority_queue 
 	{
 	private:
 		size_t _size = 0;	///< 容量大小
-		Vector<T> _pq;		///< 以vector实现
+		Container _pq;		///< 以vector实现
 		compare _cmp;		///< function object
 	public:
 		Priority_queue()  {}
 		~Priority_queue() {};
 
+		/// @brief 是压入一个元素key
+		/// @attention 没什么可以注意的
+		/// @param key 是一个T类型的元素
 		void push(const T& key);
 		void pop();
 		T top();
@@ -28,8 +31,8 @@ namespace MercedesKK
 		bool empty()	{ return _size == 0 ? true : false; }
 	};
 
-	template<typename T, typename compare>
-	void Priority_queue<T, compare>::push(const T& key)
+	template<typename T, typename Container, typename compare>
+	void Priority_queue<T, Container, compare>::push(const T& key) 
 	{
 		_pq.push_back(key);
 		_size++;
@@ -48,8 +51,8 @@ namespace MercedesKK
 	}
 
 	//将顶部元素删除，将尾部元素替换到顶部，然后下沉该元素
-	template<typename T, typename compare>
-	void Priority_queue<T, compare>::pop()
+	template<typename T, typename Container, typename compare>
+	void Priority_queue<T, Container, compare>::pop()
 	{
 		if (_size == 0)
 			return;
@@ -92,8 +95,8 @@ namespace MercedesKK
 
 
 
-	template<typename T, typename compare>
-	inline T Priority_queue<T, compare>::top()
+	template<typename T, typename Container, typename compare>
+	inline T Priority_queue<T, Container, compare>::top()
 	{
 		if (empty()) 
 			throw("Priority queue is empty!");
@@ -101,8 +104,8 @@ namespace MercedesKK
 	}
 
 	//清空堆
-	template<typename T, typename compare>
-	inline void Priority_queue<T, compare>::clear()
+	template<typename T, typename Container, typename compare>
+	inline void Priority_queue<T, Container, compare>::clear()
 	{
 		_pq.clear();
 		_size = 0;

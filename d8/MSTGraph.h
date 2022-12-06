@@ -7,10 +7,10 @@ class MSTGraph : public Graph<T>
 {
 public:
 	using MyBase = Graph<T>;
-	using EdgeNode = EdgeNode<T>;
+	using Edgenode = EdgeNode<T>;
 
 private:
-	EdgeNode* edges;
+	Edgenode* edges;
 	bool edgesCanBePrinted;
 
 public:
@@ -84,7 +84,7 @@ inline void MSTGraph<T>::__createPrimTree()
 	int* dist = new (std::nothrow)int[n]; // 在本函数delete
 	int* st   = new (std::nothrow)int[n];
 	int* pre  = new (std::nothrow)int[n];
- 	edges = new EdgeNode[n];  // 在析构函数去delete
+ 	edges = new Edgenode[n];  // 在析构函数去delete
 	int res = 0;
 	int cnt = 0; // edges的下标
 
@@ -108,7 +108,7 @@ inline void MSTGraph<T>::__createPrimTree()
 					t = j;
 			}
 			if (t != k)
-				edges[cnt++] = EdgeNode(MyBase::verticesList[pre[t]], MyBase::verticesList[t], MyBase::edgeMatrix[pre[t]][t]);
+				edges[cnt++] = Edgenode(MyBase::verticesList[pre[t]], MyBase::verticesList[t], MyBase::edgeMatrix[pre[t]][t]);
 
 			st[t] = 1;
 			res += dist[t];

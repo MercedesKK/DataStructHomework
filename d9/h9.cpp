@@ -3,6 +3,7 @@
 #include "Vector.hpp"
 
 using namespace MySTL;
+using namespace std;
 
 class KeyPath
 {
@@ -19,33 +20,33 @@ public:
 
     struct Point
     {
-        int earlytime;  ///< ×îÔçÊ±¼ä
-        int lasttime;   ///< ×îÍíÊ±¼ä
-        int indegree;   ///< Èë¶È
-        int outdegree;  ///< ³ö¶È
+        int earlytime;  ///< æœ€æ—©æ—¶é—´
+        int lasttime;   ///< æœ€æ™šæ—¶é—´
+        int indegree;   ///< å…¥åº¦
+        int outdegree;  ///< å‡ºåº¦
     } Points[MAXN];
 
 private:
-    int checkpoints;  ///< ¶¥µãÊý
-    int activities;   ///< ±ßÊý
-    int G[MAXN][MAXN];///< ÁÚ½Ó¾ØÕó
-    int totaltime = 0;///< ×ÜÈÎÎñÊ±¼ä
+    int checkpoints;  ///< é¡¶ç‚¹æ•°
+    int activities;   ///< è¾¹æ•°
+    int G[MAXN][MAXN];///< é‚»æŽ¥çŸ©é˜µ
+    int totaltime = 0;///< æ€»ä»»åŠ¡æ—¶é—´
 
-    Vector<Edges> inputEdges; ///< ´æ°´ÊäÈëË³ÐòµÄ±ß
+    Vector<Edges> inputEdges; ///< å­˜æŒ‰è¾“å…¥é¡ºåºçš„è¾¹
 
 public:
     void carry()
     {
-        std::cout << "ÎªÀàËÆOJ±ãÓÚ²âÊÔÊý¾Ý£¬±¾ÌâÎÞÊäÈëÌáÊ¾£¬ÊäÈë·½Ê½ÈçÏÂ£º\n";
-        std::cout << "µÚÒ»ÐÐÊäÈëÈÎÎñ½»½ÓµãnºÍÈÎÎñÊýÁ¿m\n";
-        std::cout << "µÚ2ÐÐÖÁµÚm + 1ÐÐÃ¿ÐÐÎª3¸öÕýÕûÊý£¬·Ö±ðÊÇ¸ÃÈÎÎñ¿ªÊ¼ºÍÍê³ÉÉè¼ÆµÄ½»½Óµã±àºÅÒÔ¼°Íê³É¸ÃÈÎÎñËùÐèÒªµÄÊ±¼ä£¬ÕûÊý¼äÓÃ¿Õ¸ñ·Ö¸ô\n";
-        scanf_s("%d %d", &checkpoints, &activities);
+        std::cout << "ä¸ºç±»ä¼¼OJä¾¿äºŽæµ‹è¯•æ•°æ®ï¼Œæœ¬é¢˜æ— è¾“å…¥æç¤ºï¼Œè¾“å…¥æ–¹å¼å¦‚ä¸‹ï¼š\n";
+        std::cout << "ç¬¬ä¸€è¡Œè¾“å…¥ä»»åŠ¡äº¤æŽ¥ç‚¹nå’Œä»»åŠ¡æ•°é‡m\n";
+        std::cout << "ç¬¬2è¡Œè‡³ç¬¬m + 1è¡Œæ¯è¡Œä¸º3ä¸ªæ­£æ•´æ•°ï¼Œåˆ†åˆ«æ˜¯è¯¥ä»»åŠ¡å¼€å§‹å’Œå®Œæˆè®¾è®¡çš„äº¤æŽ¥ç‚¹ç¼–å·ä»¥åŠå®Œæˆè¯¥ä»»åŠ¡æ‰€éœ€è¦çš„æ—¶é—´ï¼Œæ•´æ•°é—´ç”¨ç©ºæ ¼åˆ†éš”\n";
+        cin >> checkpoints >> activities;
         InitGraph();
         InitPoints();
         InsertActivities();
         totaltime = EarlytimeCheck();
         if (totaltime == 0)
-            printf("\n0");
+            printf("0\n");
         else
         {
             printf("\n%d\n", totaltime);
@@ -81,7 +82,8 @@ private:
         int i, point1, point2, time;
         for (i = 1; i <= activities; i++)
         {
-            scanf_s("%d %d %d", &point1, &point2, &time);
+            cin >> point1 >> point2 >> time;
+            //scanf_s("%d %d %d", &point1, &point2, &time);
             G[point1][point2] = time;
             Points[point1].outdegree++;
             Points[point2].indegree++;
@@ -170,7 +172,7 @@ private:
                     }
                 }
             }
-            // ÄæÐòÊä³ö
+            // é€†åºè¾“å‡º
             for (auto it = inputEdges.end(); it >= inputEdges.begin(); it--)
             {
                 for (auto it2 = temp.begin(); it2 != temp.end(); it2++)

@@ -2,6 +2,8 @@
 #ifndef _VECTOR_H_
 #define _VECTOR_H_
 
+#include <stdexcept>
+
 namespace MercedesKK
 {
 	/**
@@ -14,7 +16,7 @@ namespace MercedesKK
 	{
 	public:
 		using value_type = T;
-		using iterator   = T*;
+		using iterator = T*;
 
 	private:
 		value_type* _data;		///< 动态分配实现的数组
@@ -26,11 +28,15 @@ namespace MercedesKK
 		/// @name Constructors
 		/// @{
 		Vector() :_data(nullptr), _size(0), _capacity(0) {}
-		Vector(size_t n) :_data(new value_type[n]), _size(n), _capacity(n * 2) {}
-		Vector(size_t n, value_type val);
+		Vector(int n) :_data(new value_type[n]()), _size(n), _capacity(n * 2) {}
+		Vector(int n, value_type val);
 		~Vector();
 		Vector(const Vector& vec);
+		Vector(Vector&& vec) = default;
 		Vector& operator=(const Vector& vec);
+
+		template <typename InputIterator>
+		Vector(InputIterator first, InputIterator last);
 		/// @} 
 		// end of Constructors
 
@@ -48,7 +54,7 @@ namespace MercedesKK
 		void push_back(value_type val);
 		void pop_back() { --_size; };
 
-		size_t Size() const { return _size; };
+		size_t size() const { return _size; };
 		size_t capacity() const { return _capacity; };
 		bool empty() { return _size == 0; };
 		void clear();
@@ -67,14 +73,23 @@ namespace MercedesKK
 
 	};
 
+	template<typename T>
+	inline Vector<T>::Vector(int n, value_type val)
+	{
+		_data = new value_type[n];
+		_size = n;
+		_capacity = 2 * n;
+		for (size_t i = 0; i < n; i++)
+		{
+			_data[i] = val;
+		}
+	}
 
 	template <typename T>
 	Vector<T>::~Vector()
 	{
-		delete[]_data;
-		_data = nullptr;
-		_size = 0;
-		_capacity = 0;
+		if (_data != nullptr)
+			clear();
 	}
 
 	template <typename T>
@@ -132,10 +147,13 @@ namespace MercedesKK
 	template <typename T>
 	void Vector<T>::insert(iterator it, value_type val)
 	{
+		if (it - _data > _size || it - _data < 0)
+			throw std::out_of_range("out_of_range");
+
 		int index = it - _data;
 		if (0 == _capacity) {
 			_capacity = 1;
-			_capacity = new value_type[1];
+			_data = new value_type[1];
 			_data[0] = val;
 		}
 		else if (_size + 1 > _capacity)
@@ -164,6 +182,9 @@ namespace MercedesKK
 	template <typename T>
 	void Vector<T>::erase(iterator it)
 	{
+		if (it - _data > _size || it - _data < 0)
+			throw std::out_of_range("out_of_range");
+
 		size_t index = it - _data;
 		for (int i = index; i < _size - 1; i++)
 		{
@@ -193,6 +214,20 @@ namespace MercedesKK
 				return false;
 		}
 		return true;
+	}
+	template<typename T>
+	template<typename InputIterator>
+	inline Vector<T>::Vector(InputIterator first, InputIterator last)
+	{
+		size_t offset = static_cast<size_t>(last - first);
+		_data = new T[offset]();
+		_size = offset;
+		_capacity = 2 * offset;
+		size_t index = 0;
+		for (auto fir = first; fir != last; fir++)
+		{
+			_data[index++] = *fir;
+		}
 	}
 }
 #endif // !_VECTOR_H_
