@@ -1,2 +1,3 @@
-# dataStruct课程设计
-大二上 10个基于C++实现的数据结构课程设计作业
+# Software Engineering Data structure course design in 2022
+
+> Just to keep track of my homework
